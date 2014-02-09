@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+    {{> ie-fix }}
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>The Keyword Universe</title>
+
+        <!-- fonts -->
+        {{> fonts }}
+
+        <!-- bootstrap body margins -->
+        <style>
+            body {
+                padding-top: 90px;
+                padding-bottom: 40px;
+            }
+        </style>
+
+        <!-- bootstrap css and modernizr script -->
+        <link rel="stylesheet" href="/stylesheets/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="/stylesheets/bootstrap/main.css">
+        <script src="/javascripts/bootstrap/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    </head>
+    <body>
+
+        <!-- unsupported browser fix -->
+        {{> unsupported-browser }}
+
+        <!-- Main content -->
+        {{> landing-content }}
+
+        <!-- Scripts -->
+        {{> essential-scripts }}
+
+        <!-- Main app -->
+        <script src="/javascripts/landing/main.js"></script>
+    </body>
+</html>

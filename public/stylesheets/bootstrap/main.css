@@ -466,3 +466,8 @@ a .list-group-item .active {
     padding: 15px;
     max-width: 500px;
 }
+
+/* fix height for top 10 list */
+.heightfix {
+    min-height: 580px;
+}

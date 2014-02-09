@@ -9,6 +9,7 @@ Make sure you have mongodb and redis installed (brew install, or other install m
 
 Run the dependencies
 
+* npm install
 * redis-server /usr/local/etc/redis.conf
 * mongod
 

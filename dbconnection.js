@@ -6,11 +6,6 @@ var mongoose = require("mongoose");
 var async = require("async");
 var util = require('util');
 
-// debug
-var debugModule = require('./debughelpers');
-var debug = new debugModule('maelstrom:db-connection');
-debug.setLevel(3);
-
 // Keyword schema
 var keywordSchema = new mongoose.Schema({
     keyword: {

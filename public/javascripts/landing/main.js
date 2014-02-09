@@ -140,7 +140,7 @@ $(document).ready(function() {
                 console.log(data);
                 // render template with data
                 var renderedElement = renderTemplate('top-ten', { content: data });
-                $('#topten').html(renderedElement); // replace the content
+                $('#topten').empty().append(renderedElement); // replace the content
             })
             .fail(function(jqxhr, textStatus, error){
                 // handle error

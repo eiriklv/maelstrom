@@ -113,7 +113,7 @@ $(document).ready(function() {
     // socket.io connection
     var socket = io.connect();
 
-    // instaQueue (min 0,5 second between each append, with max 100 operations in the queue before discarding further requests)
+    // instaQueue (min 0,4 second between each append, with max 100 operations in the queue before discarding further requests)
     var animationQueue = new InstaQueue(400, 20, function(exec){
         exec();
     });

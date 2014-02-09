@@ -201,5 +201,7 @@ $(document).ready(function() {
 
     // set interval for updating top 10 (every 10 seconds)
     updateTopTen(); // init on load
-    setInterval(updateTopTen, 10000);
+    setInterval(function(){
+        updateTopTen();
+    }.bind(this), 10000);
 });

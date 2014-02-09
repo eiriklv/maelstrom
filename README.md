@@ -2,7 +2,7 @@ Maelstrom
 =========
 
 Application to collect and distribute incoming messages from either browser (socket.io) or via HTTP API request.
-Online demo: http://weblistener.herokuapp.com
+Live demo: http://weblistener.herokuapp.com
 
 ###Local development usage:
 

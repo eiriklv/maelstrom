@@ -13,6 +13,7 @@ Run the dependencies
 * ```npm install```
 * ```redis-server /usr/local/etc/redis.conf```
 * ```mongod```
+* Set environment variable DOMAIN ```export DOMAIN=yourdomain``` defaults to ```localhost```
 
 Spawn one or more processes of the application
 

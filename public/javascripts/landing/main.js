@@ -152,12 +152,12 @@ $(document).ready(function() {
         });
     }
 
-    // add secret to view (add to the middle of the view, and slide out in a random angle)
+    // add search to view (add to the middle of the view, and slide out in a random angle)
     function addKeyword(data){
-        var secret = $('<div class="secret">'+data.keyword+'</div>'); // create DOM-element
-        secret.css('top', ($('#secretbox').height()/2)); // vertical center
-        secret.css('left', ($('#secretbox').width()/2)*0.85); // horizontal center
-        secret.css('opacity', 0); // start as transparent
+        var keyword = $('<div class="secret">'+data.keyword+'</div>'); // create DOM-element
+        keyword.css('top', ($('#secretbox').height()/2)); // vertical center
+        keyword.css('left', ($('#secretbox').width()/2)*0.85); // horizontal center
+        keyword.css('opacity', 0); // start as transparent
 
         // send the input in a random direction (using simple pytagoras/unit circle)
         var randomAngle = Math.floor((Math.random()*360)+0); // random angle 0-360
@@ -169,12 +169,12 @@ $(document).ready(function() {
 
         // add to queue for append/animate/remove
         animationQueue.addToQueue(function(){
-            $('#secretbox').append(secret); // append to document
+            $('#secretbox').append(keyword); // append to document
             // animate/move/enlarge text
-            secret.animate(translateObject, 3000 , function(){
+            keyword.animate(translateObject, 3000 , function(){
                 // do a new animation to fade out before removing
-                secret.animate({ 'opacity': 0 }, function(){
-                    secret.remove(); // remove object when animation is finished
+                keyword.animate({ 'opacity': 0 }, function(){
+                    keyword.remove(); // remove object when animation is finished
                 }.bind(this));
             }.bind(this));
         }.bind(this));

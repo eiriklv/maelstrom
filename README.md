@@ -10,22 +10,22 @@ Live demo: http://weblistener.herokuapp.com
 
 Make sure you have mongodb and redis installed (either by using a package manager or other install method)
 
-Install dependencies
+#### Install dependencies:
 
 * ```brew install redis```
 * ```brew install mongodb```
 * ```npm install```
 
-Run dependencies
+#### Run dependencies
 
 * ```redis-server /usr/local/etc/redis.conf```
-* ```mongod```
+* ```mongod -f /usr/local/etc/mongod.conf```
 
 Spawn one or more processes of the application
 
 * ```node app PORT```
 
-####Example:
+#### Example:
 
 Open a separate terminal window for each of the following commands
 
@@ -38,7 +38,7 @@ You now have two processes of the application running,
 which should be reachable on ```http://localhost:3001``` and ```http://localhost:3002``` respectively.
 If you were to load balance you would put nginx or varnish as a reverse proxy in front of these. All processes spawned will be connected through the custom redis rpc.
 
-###Unit tests
+#### Unit tests:
 
 - To run tests, first install nodeunit (```npm install nodeunit -g```)
 - Start the depencencies (redis-server and mongod)

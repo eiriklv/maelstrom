@@ -1,11 +1,7 @@
-//////////////////////////////////////////////////////////////////
-///////////////// DEPENDENCIES AND MODULES ///////////////////////
-//////////////////////////////////////////////////////////////////
-
 // dependencies
 var express = require('express');
 var RedisStore = require('connect-redis')(express);
-var Routes = require('./routes'); // This fetches /routes/index.js
+var Handlers = require('./handlers');
 var http = require('http');
 var path = require('path');
 var util = require('util');
@@ -14,22 +10,18 @@ var url = require('url');
 var consolidate = require('consolidate');
 var Handlebars = require('handlebars');
 var fs = require('fs');
-var db = require('./dbconnection');
+var db = require('./modules/dbconnection');
 
 // app specific modules
 var AppModules = {};
-AppModules.Sockets = require('./sockets');
-AppModules.PubSub = require('./pubsub');
-AppModules.Bootstrap = require('./bootstrap');
+AppModules.Sockets = require('./modules/sockets');
+AppModules.PubSub = require('./modules/pubsub');
+AppModules.Routes = require('./routes');
 
 // debug module
-var debugModule = new require('./debughelpers');
+var debugModule = new require('./modules/debughelpers');
 var debug = new debugModule('maelstrom:main');
 debug.setLevel(4);
-
-//////////////////////////////////////////////////////////////////
-///////////////////////// CONFIGURATION //////////////////////////
-//////////////////////////////////////////////////////////////////
 
 // catch all errors not listened to and print stack before killing the process
 process.on('uncaughtException', function(err) {
@@ -38,10 +30,12 @@ process.on('uncaughtException', function(err) {
     process.exit(1);
 });
 
-// Create express app
+// create express app
 var app = express();
+
 // secret key (for session/cookies)
 var appsecret = process.env.APPSECRET || 'maelstromsecret';
+
 // Session storage and settings (must be the same in express sessions)
 var cookieParser = express.cookieParser(appsecret);
 
@@ -114,8 +108,8 @@ if('localdev' == app.get('env')){
     app.use(express.errorHandler()); // enable the express error handler
 }
 
-// Initializing the routes
-var routes = new Routes();
+// Initializing the handlers
+var handlers = new Handlers();
 
 // http and socket.io server
 var server = http.createServer(app); // http
@@ -124,13 +118,8 @@ var io = require('socket.io').listen(server); // socket.io
 // socket.io config
 io.configure(function (){
     io.set('log level', 1); // turn off logging (too verbose..)
-    //io.set("transports", ["xhr-polling"]); // prevent socket.io from using websockets on heroku (still in beta)
     io.set("polling duration", 10); // pollin interval when using xhr-polling
 });
-
-//////////////////////////////////////////////////////////////////
-/////////////////// BOOTSTRAPPING AND INIT ///////////////////////
-//////////////////////////////////////////////////////////////////
 
 // connect to db and bootstrap application
 (function bootstrap(){
@@ -143,7 +132,7 @@ io.configure(function (){
             /* initialize remote process communication (rpc) */
             AppModules.PubSub();
             /* initialize application and bind to port */
-            AppModules.Bootstrap(app, server, routes);
+            AppModules.Routes(app, server, handlers);
         }
         else{
             process.exit(1); // abort execution of app

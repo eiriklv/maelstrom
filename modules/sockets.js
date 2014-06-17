@@ -11,13 +11,14 @@ var debug = new debugModule('maelstrom:sockets');
 debug.setLevel(4);
 
 // handle socket io
-function sockets(io){
+function sockets(io) {
     // do something with socket.io here
-    io.sockets.on('connection', function (socket) {
+    io.sockets.on('connection', function(socket) {
         debug.log('user connected via socket.io'.yellow, 'info');
 
         // broadcast the input to all sockets connected
-        function broadcastInput(data){
+
+        function broadcastInput(data) {
             socket.emit('keywordAdded', data);
         }
 
@@ -25,13 +26,13 @@ function sockets(io){
         ipc.on('remoteAdded', broadcastInput);
 
         // handle input from browser
-        socket.on('input', function(data){
+        socket.on('input', function(data) {
             debug.log('got input from browser'.magenta, 'info');
             ipc.emit('localAdded', data); // send to pubsub processing
         });
 
         // remove listener from event to prevent errors and memory leaks
-        socket.on('disconnect', function () {
+        socket.on('disconnect', function() {
             debug.log('user disconnected from socket.io'.grey, 'info');
             ipc.removeListener('remoteAdded', broadcastInput);
         });

@@ -27,10 +27,13 @@ var keywordSchema = new mongoose.Schema({
 var Keyword = mongoose.model('keyword', keywordSchema);
 
 // Connecting to the database
-var connectToDatabase = function connectToDatabase(callback){
+var connectToDatabase = function connectToDatabase(callback) {
     // Makes connection asynchronously.  Mongoose will queue up database
     // operations and release them when the connection is complete.
-    mongoose.connect(uristring, { keepAlive: 1, poolSize: 1000 }, function (err, res) {
+    mongoose.connect(uristring, {
+        keepAlive: 1,
+        poolSize: 1000
+    }, function(err, res) {
         if (err) {
             callback('ERROR connecting to mongodb database: ' + uristring + '. ' + err);
         } else {
@@ -40,67 +43,62 @@ var connectToDatabase = function connectToDatabase(callback){
 };
 
 // close db connection (for unit testing)
-var closeConnection = function closeConnection(){
+var closeConnection = function closeConnection() {
     mongoose.connection.close();
 };
 
 // add a keyword to the db with TTL
-var addKeywordToDatabase = function addKeywordToDatabase(keywordObject, callback){
+var addKeywordToDatabase = function addKeywordToDatabase(keywordObject, callback) {
 
     // create a new database entry
     var newKeywordEntry = new Keyword(keywordObject);
 
     // Save it to the database.
-    newKeywordEntry.save(function (err, product){
-        if(!err){
+    newKeywordEntry.save(function(err, product) {
+        if (!err) {
             callback(null, product);
-        }
-        else{
+        } else {
             callback('error saving keyword: ' + err);
         }
     });
 };
 
 // get the most popular keywords (use aggregation/grouping)
-var getMostPopularKeywords = function getMostPopularKeywords(callback){
+var getMostPopularKeywords = function getMostPopularKeywords(callback) {
     // use the mongodb aggregate framework (pipelining) to get the most popular keywords
-    Keyword.aggregate(
-        {
+    Keyword.aggregate({
             $project: {
                 _id: 0, // leave this field out
                 keyword: 1, // we want this
                 source: 1 // we want this
             }
-        },
-        {
+        }, {
             $group: {
                 _id: '$keyword', // grouping key - group by keyword
-                total: { $sum: 1 } // sum up the results and add it to the total for each keyword
+                total: {
+                    $sum: 1
+                } // sum up the results and add it to the total for each keyword
             }
-        },
-        {
+        }, {
             $project: {
                 _id: 0, // leave this field out
                 keyword: '$_id', // rename
                 total: '$total' // keep
             }
-        },
-        {
-            $sort : {
-                total : -1 // sort descending by total count
+        }, {
+            $sort: {
+                total: -1 // sort descending by total count
             }
-        },
-        {
+        }, {
             $limit: 10 // limit to 10 results (top 10)
         },
-        function(err, result){
-        if(err){
-            callback(err);
-        }
-        else{
-            callback(null, result);
-        }
-    });
+        function(err, result) {
+            if (err) {
+                callback(err);
+            } else {
+                callback(null, result);
+            }
+        });
 };
 
 // Module exports

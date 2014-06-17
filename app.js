@@ -1,12 +1,9 @@
-//////////////////////////////////////////////////////////////////
-///////////////// DEPENDENCIES AND MODULES ///////////////////////
-//////////////////////////////////////////////////////////////////
-
 // dependencies
 var express = require('express');
 var RedisStore = require('connect-redis')(express);
 var Routes = require('./routes'); // This fetches /routes/index.js
 var http = require('http');
+var debug = require('debug')('maelstrom:app');
 var path = require('path');
 var util = require('util');
 var colors = require('colors');
@@ -16,25 +13,20 @@ var Handlebars = require('handlebars');
 var fs = require('fs');
 var db = require('./dbconnection');
 
+// config
+var config = require('./config');
+var setup = require('./setup');
+
 // app specific modules
 var AppModules = {};
 AppModules.Sockets = require('./sockets');
 AppModules.PubSub = require('./pubsub');
 AppModules.Bootstrap = require('./bootstrap');
 
-// debug module
-var debugModule = new require('./debughelpers');
-var debug = new debugModule('maelstrom:main');
-debug.setLevel(4);
-
-//////////////////////////////////////////////////////////////////
-///////////////////////// CONFIGURATION //////////////////////////
-//////////////////////////////////////////////////////////////////
-
 // catch all errors not listened to and print stack before killing the process
 process.on('uncaughtException', function(err) {
-    debug.log('Caught exception without specific handler: ' + err, 'error');
-    debug.log(err.stack, 'error', 'error');
+    debug('Caught exception without specific handler: ' + err);
+    debug(err.stack, 'error');
     process.exit(1);
 });
 
@@ -46,8 +38,8 @@ var appsecret = process.env.APPSECRET || 'maelstromsecret';
 var cookieParser = express.cookieParser(appsecret);
 
 // print environment variables
-debug.log(app.get('env'));
-debug.log(util.inspect(process.env));
+debug(app.get('env'));
+debug(util.inspect(process.env));
 
 // print process arguments
 process.argv.forEach(function(val, index, array) {
@@ -134,10 +126,10 @@ io.configure(function (){
 
 // connect to db and bootstrap application
 (function bootstrap(){
-    debug.log('connecting to db..'.yellow, 'info');
+    debug('connecting to db..'.yellow);
     db.connectToDatabase(function (err){
         if(!err){
-            debug.log('connected to backend-db! - initializing maelstrom..'.green, 'info');
+            debug('connected to backend-db! - initializing maelstrom..'.green);
             /* initialize socket.io code */
             AppModules.Sockets(io);
             /* initialize remote process communication (rpc) */

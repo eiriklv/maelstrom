@@ -1,11 +1,7 @@
 // dependencies
 var util = require('util');
 var colors = require('colors');
-
-// debug
-var debugModule = require('./debughelpers');
-var debug = new debugModule('maelstrom:bootstrap');
-debug.setLevel(4);
+var debug = require('debug')('maelstrom:bootstrap');
 
 // bind routes to path and bind application to port
 function init(app, server, routes){
@@ -23,7 +19,7 @@ function init(app, server, routes){
 
     // bind to port
     server.listen(app.get('port'), function(){
-        debug.log('maelstrom server listening to port '.green + app.get('port'), 'info');
+        debug('maelstrom server listening to port '.green + app.get('port'));
     });
 }
 
